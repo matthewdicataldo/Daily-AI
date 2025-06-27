@@ -1,0 +1,107 @@
+# Zig build artifacts
+zig-cache/
+zig-out/
+.zig-cache/
+
+# Environment variables (contains API keys)
+.env
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Output files
+output/*.md
+output/*.json
+output/*.html
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Downloaded binaries
+yt-dlp
+yt-dlp.exe
+skyd
+skyd.exe
+
+# Build artifacts from external dependencies
+external/skytable/target/
+external/*/build/
+external/*/target/
+
+# Cache directories  
+.cache/
+external/skytable/.cache/
+
+# Backup files (if generated during development)
+*.backup
+*_backup.*
+*_original.*
+
+# Planning and migration artifacts  
+*_PLAN.md
+migrate_*.sh
+
+# New consolidated modules build artifacts
+src/ai_relevance_filter.zig.tmp
+src/cache_unified.zig.tmp
+src/extract_base.zig.tmp
+
+# Skytable database files
+*.db-tlog
+gns.db-tlog
+
+# Additional build tools
+sky-bench
+skysh
+sky-bundle*
+
+# Security sensitive files
+*.key
+*.pem
+*.p12
+*.pfx
+secret*
+secrets/
+.secrets/
+*.secret
+
+# Development artifacts
+*.orig
+*.patch
+.DS_Store?
+node_modules/
+package-lock.json
+
+# Archive files that might contain binaries
+*.zip
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.rar
+
+# Testing artifacts
+test_output/
+coverage/
+*.coverage
+test-results/
+
+# Configuration overrides (should use .env instead)
+config.local.*
+local.config.*

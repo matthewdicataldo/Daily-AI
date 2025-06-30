@@ -40,7 +40,7 @@ const ExtractionContext = struct {
     cli_config: *const cli.CliConfig,
     content_cache: *cache.ContentCache,
     result_index: usize,
-    results: *[6]?ExtractionResult,
+    results: *[7]?ExtractionResult,
 };
 
 /// Clean up old log files, keeping only the 5 most recent ones and all blog files
@@ -235,7 +235,7 @@ pub fn main() !void {
     try stream.updateOperation("content_extract", 0.1, "Starting parallel content extraction", 0, null);
     
     // Create extraction results structure for parallel processing
-    const MAX_EXTRACTORS = 6; // Reddit, YouTube, TikTok, Research, Blog, News, RSS
+    const MAX_EXTRACTORS = 7; // Reddit, YouTube, TikTok, Research, Blog, News, RSS
     var extraction_results = [_]?ExtractionResult{null} ** MAX_EXTRACTORS;
     
     // Create thread pool for parallel extraction
@@ -281,7 +281,7 @@ pub fn main() !void {
             .result_index = 3,
             .results = &extraction_results,
         },
-        ExtractionContext{ // News - Index 4
+        ExtractionContext{ // Blog - Index 4
             .allocator = allocator,
             .api_keys = &api_keys,
             .firecrawl_client = &firecrawl_client,
@@ -290,13 +290,22 @@ pub fn main() !void {
             .result_index = 4,
             .results = &extraction_results,
         },
-        ExtractionContext{ // RSS - Index 5
+        ExtractionContext{ // News - Index 5
             .allocator = allocator,
             .api_keys = &api_keys,
             .firecrawl_client = &firecrawl_client,
             .cli_config = &cli_config,
             .content_cache = &content_cache,
             .result_index = 5,
+            .results = &extraction_results,
+        },
+        ExtractionContext{ // RSS - Index 6
+            .allocator = allocator,
+            .api_keys = &api_keys,
+            .firecrawl_client = &firecrawl_client,
+            .cli_config = &cli_config,
+            .content_cache = &content_cache,
+            .result_index = 6,
             .results = &extraction_results,
         },
     };
@@ -326,14 +335,19 @@ pub fn main() !void {
         thread_pool.spawnWg(&wait_group, extractResearchParallel, .{&extraction_contexts[3]});
     }
     
+    // Launch Blog extraction
+    if (config.Config.blog_sources.len > 0 and cli_config.sources.isEnabled(.blog)) {
+        thread_pool.spawnWg(&wait_group, extractBlogParallel, .{&extraction_contexts[4]});
+    }
+    
     // Launch News extraction
     if (config.Config.news_sources.len > 0 and cli_config.sources.isEnabled(.web_crawl)) {
-        thread_pool.spawnWg(&wait_group, extractNewsParallel, .{&extraction_contexts[4]});
+        thread_pool.spawnWg(&wait_group, extractNewsParallel, .{&extraction_contexts[5]});
     }
     
     // Launch RSS extraction
     if (config.Config.rss_sources.len > 0 and cli_config.sources.rss) {
-        thread_pool.spawnWg(&wait_group, extractRSSParallel, .{&extraction_contexts[5]});
+        thread_pool.spawnWg(&wait_group, extractRSSParallel, .{&extraction_contexts[6]});
     }
     
     // Wait for all extraction threads to complete

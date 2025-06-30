@@ -22,11 +22,6 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Output files
-output/*.md
-output/*.json
-output/*.html
-
 # Logs
 *.log
 

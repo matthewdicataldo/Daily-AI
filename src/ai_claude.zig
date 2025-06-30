@@ -412,6 +412,8 @@ pub const ClaudeClient = struct {
         var child = std.process.Child.init(&[_][]const u8{ 
             "claude", 
             temp_file_path,
+            "--model",
+            self.claude_model,
             "--output-format", 
             "text",
             "--input-format",
@@ -466,6 +468,8 @@ pub const ClaudeClient = struct {
         var child = std.process.Child.init(&[_][]const u8{ 
             "claude", 
             temp_file_path,
+            "--model",
+            model,
             "--output-format", 
             "text",
             "--input-format",
@@ -502,6 +506,12 @@ pub const ClaudeClient = struct {
     fn buildComprehensivePrompt(self: *ClaudeClient, content: processor.ProcessedContent) ![]const u8 {
         var prompt = std.ArrayList(u8).init(self.allocator);
         
+        // Get today's date dynamically
+        const now = types.getCurrentTimestamp();
+        const date_str = try types.timestampToString(self.allocator, now);
+        defer self.allocator.free(date_str);
+        const date_part = date_str[0..10]; // Extract YYYY-MM-DD part
+        
         try prompt.appendSlice(
             \\<instructions>
             \\You are a tech journalist writing for a professional AI publication. Analyze the provided sources and create a comprehensive AI news blog post.
@@ -516,11 +526,19 @@ pub const ClaudeClient = struct {
             \\</thinking>
             \\
             \\<blog>
-            \\[The complete markdown blog post starting with # AI News - 2025-06-27]
+            \\[The complete markdown blog post starting with # AI News - 
+        );
+        try prompt.appendSlice(date_part);
+        try prompt.appendSlice(
+            \\]
             \\</blog>
             \\
             \\Blog requirements for the <blog> section:
-            \\- Title with today's date (2025-06-27)
+            \\- Title with today's date (
+        );
+        try prompt.appendSlice(date_part);
+        try prompt.appendSlice(
+            \\)
             \\- Executive summary of key trends
             \\- Organized thematic sections
             \\- Analysis and context for significant items

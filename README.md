@@ -180,25 +180,7 @@ valgrind ./zig-out/bin/daily_ai --reddit-only
 ```
 
 ### Output Example
-```markdown
-# AI News Roundup - June 27, 2025
-
-## 🔬 Research & Development
-- **New Transformer Architecture**: Researchers at MIT propose...
-- **LLM Safety Breakthrough**: Anthropic releases Constitutional AI...
-
-## 🚀 Industry News
-- **OpenAI Announces GPT-5**: Next-generation model with...
-- **Google AI Integration**: New features in Google Workspace...
-
-## 💼 Business & Funding
-- **$2B AI Startup Funding**: Vector database company raises...
-
-## 🛠️ Tools & Platforms  
-- **Open Source Release**: Meta releases Llama 3...
-
-*Generated with [Claude Code](https://claude.ai/code) | Sources: Reddit, RSS, Research Papers*
-```
+see /output
 
 ### Development Setup
 ```bash
